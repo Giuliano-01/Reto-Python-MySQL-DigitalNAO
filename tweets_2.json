@@ -1,0 +1,251 @@
+[
+    {
+        "id": 1,
+        "texto": "La tecnología de la realidad virtual está revolucionando la forma en que experimentamos los videojuegos. #tecnología #videojuegos",
+        "usuario": "gamers_unidos",
+        "hashtags": ["tecnología", "videojuegos"],
+        "fecha": "2023-03-13 16:45:00",
+        "retweets": 23,
+        "favoritos": 87
+    },
+
+    {
+        "id": 2,
+        "texto": "Apple anuncia el lanzamiento de su nuevo iPhone 15 con cámara mejorada y pantalla OLED de 6,7 pulgadas. #Apple #iPhone15",
+        "usuario": "tech_news",
+        "hashtags": ["Apple", "iPhone15"],
+        "fecha": "2023-03-12 10:30:00",
+        "retweets": 234,
+        "favoritos": 1876
+    },
+
+    {
+        "id": 3,
+        "texto": "Google presenta su nuevo asistente virtual con inteligencia artificial que permite controlar el hogar desde el smartphone. #Google #hogarinteligente",
+        "usuario": "tech_guru",
+        "hashtags": ["Google", "hogarinteligente"],
+        "fecha": "2023-03-11 15:20:00",
+        "retweets": 78,
+        "favoritos": 489
+    },
+
+    {
+        "id": 4,
+        "texto": "La empresa de tecnología SpaceX anuncia el lanzamiento de su primer vuelo comercial a la luna. #SpaceX #vuelolunar",
+        "usuario": "espaciofan",
+        "hashtags": ["SpaceX", "vuelolunar"],
+        "fecha": "2023-03-10 13:10:00",
+        "retweets": 109,
+        "favoritos": 732
+    },
+
+    {
+        "id": 5,
+        "texto": "El nuevo dron de DJI es capaz de grabar video en 8K y tiene un tiempo de vuelo de hasta 45 minutos. #drones #tecnología",
+        "usuario": "dron_adicto",
+        "hashtags": ["drones", "tecnología"],
+        "fecha": "2023-03-09 17:05:00",
+        "retweets": 45,
+        "favoritos": 256
+    },
+
+    {
+        "id": 6,
+        "texto": "La empresa de tecnología Nvidia lanza su nueva tarjeta gráfica RTX 5080 con 24 GB de memoria y capacidad de ray tracing en tiempo real. #Nvidia #tarjetagráfica",
+        "usuario": "pc_master_race",
+        "hashtags": ["Nvidia", "tarjetagráfica"],
+        "fecha": "2023-03-08 11:55:00",
+        "retweets": 167,
+        "favoritos": 1045
+    },
+
+    {
+        "id": 7,
+        "texto": "Nuevo iPhone 13 con pantalla de 120Hz",
+        "usuario": "tech_news",
+        "hashtags": ["iPhone", "tecnologia"],
+        "fecha": "2022-02-27 10:20:30",
+        "retweets": 50,
+        "favoritos": 150
+    },
+
+    {
+        "id": 8,
+        "texto": "La próxima generación de procesadores Intel promete un gran avance en rendimiento",
+        "usuario": "tech_world",
+        "hashtags": ["Intel", "procesadores"],
+        "fecha": "2022-02-26 08:30:15",
+        "retweets": 120,
+        "favoritos": 250
+    },
+
+    {
+        "id": 9,
+        "texto": "Samsung presenta su nuevo teléfono plegable",
+        "usuario": "smartphone_lover",
+        "hashtags": ["Samsung", "teléfonos plegables"],
+        "fecha": "2022-02-25 15:45:00",
+        "retweets": 30,
+        "favoritos": 80
+    },
+
+    {
+        "id": 10,
+        "texto": "Apple presenta su nueva línea de MacBook Pro con chip M2",
+        "usuario": "apple_news",
+        "hashtags": ["MacBook", "Apple"],
+        "fecha": "2022-02-24 12:10:05",
+        "retweets": 80,
+        "favoritos": 200
+    },
+
+    {
+        "id": 11,
+        "texto": "Google anuncia nuevas herramientas para desarrolladores de Android",
+        "usuario": "android_dev",
+        "hashtags": ["Android", "desarrollo"],
+        "fecha": "2022-02-23 09:00:20",
+        "retweets": 40,
+        "favoritos": 100
+    },
+
+    {
+        "id": 12,
+        "texto": "Elon Musk anuncia un nuevo lanzamiento de cohetes de SpaceX",
+        "usuario": "spacex_fan",
+        "hashtags": ["SpaceX", "Elon Musk"],
+        "fecha": "2022-02-22 14:30:45",
+        "retweets": 120,
+        "favoritos": 300
+    },
+
+    {
+        "id": 13,
+        "texto": "Microsoft lanza una actualización importante para Windows 11",
+        "usuario": "windows_user",
+        "hashtags": ["Windows", "actualización"],
+        "fecha": "2022-02-21 11:40:10",
+        "retweets": 60,
+        "favoritos": 150
+    },
+
+    {
+        "id": 14,
+        "texto": "El gigante tecnológico Apple presenta su nueva línea de productos en un evento virtual. Entre las novedades se encuentran el nuevo iPhone y el Apple Watch Series 8. #AppleEvent #nuevosproductos",
+        "usuario": "appleguru",
+        "hashtags": ["AppleEvent", "nuevosproductos"],
+        "fecha": "2023-03-11 10:30:00",
+        "retweets": 652,
+        "favoritos": 4121
+    },
+
+    {
+        "id": 15,
+        "texto": "La inteligencia artificial está cada vez más presente en nuestras vidas, ¿pero sabemos realmente cómo funciona? En nuestro último artículo explicamos todo sobre esta tecnología. #inteligenciaartificial #IA",
+        "usuario": "tecnologíainfo",
+        "hashtags": ["inteligenciaartificial", "IA"],
+        "fecha": "2023-03-11 15:20:00",
+        "retweets": 34,
+        "favoritos": 93
+    },
+
+    {
+        "id": 16,
+        "texto": "La tecnología blockchain está revolucionando la forma en que se realizan las transacciones financieras. Descubre todo lo que necesitas saber sobre esta tecnología en nuestro último artículo. #blockchain #criptomonedas",
+        "usuario": "criptoinfo",
+        "hashtags": ["blockchain", "criptomonedas"],
+        "fecha": "2023-03-12 09:45:00",
+        "retweets": 51,
+        "favoritos": 189
+    },
+
+    {
+        "id": 17,
+        "texto": "Los avances en tecnología permiten crear prótesis cada vez más sofisticadas y precisas. En nuestro último artículo hablamos sobre algunos de los desarrollos más innovadores en este campo. #prótesis #tecnología",
+        "usuario": "innovatech",
+        "hashtags": ["prótesis", "tecnología"],
+        "fecha": "2023-03-12 14:15:00",
+        "retweets": 23,
+        "favoritos": 64
+    },
+
+    {
+        "id": 18,
+        "texto": "La tecnología de realidad aumentada se está convirtiendo en una herramienta indispensable para los diseñadores de moda. Descubre cómo se está utilizando esta tecnología en nuestro último artículo. #realidadaumentada #moda",
+        "usuario": "fashiontech",
+        "hashtags": ["realidadaumentada", "moda"],
+        "fecha": "2023-03-13 11:00:00",
+        "retweets": 45,
+        "favoritos": 167
+    },
+
+    {
+        "id": 19,
+        "texto": "La tecnología de reconocimiento facial está siendo utilizada en muchos ámbitos, pero ¿es realmente segura? En nuestro último artículo analizamos los riesgos de esta tecnología y cómo se pueden mitigar. #reconocimientofacial #seguridad",
+        "usuario": "seguridadtech",
+        "hashtags": ["reconocimientofacial", "seguridad"],
+        "fecha": "2023-03-13 15:30:00",
+        "retweets": 87,
+        "favoritos": 312
+    },
+
+    {
+        "id": 20,
+        "texto": "La tecnología 5G está revolucionando la forma en que nos conectamos a internet. En nuestro último artículo te explicamos todo lo que necesitas saber sobre esta nueva tecnología. #tecnología5G #internet",
+        "usuario": "conexiónveloz",
+        "hashtags": ["tecnología5G", "internet"],
+        "fecha": "2023-03-14 10:00:00",
+        "retweets": 75,
+        "favoritos": 245
+    },
+
+    {
+        "id": 21,
+        "texto": "La tecnología de la nube ha transformado la forma en que almacenamos y compartimos información. En nuestro último artículo te explicamos todo lo que necesitas saber sobre esta tecnología. #tecnologíadelanube #almacenamiento",
+        "usuario": "cloudtech",
+        "hashtags": ["tecnologíadelanube", "almacenamiento"],
+        "fecha": "2023-03-14 14:30:00",
+        "retweets": 40,
+        "favoritos": 132
+    },
+
+    {
+        "id": 22,
+        "texto": "La tecnología de la realidad virtual está transformando la forma en que experimentamos el entretenimiento. En nuestro último artículo te contamos todo lo que necesitas saber sobre esta tecnología. #realidadvirtual #entretenimiento",
+        "usuario": "entertech",
+        "hashtags": ["realidadvirtual", "entretenimiento"],
+        "fecha": "2023-03-15 09:15:00",
+        "retweets": 52,
+        "favoritos": 189
+    },
+
+    {
+        "id": 23,
+        "texto": "La tecnología de los drones está siendo utilizada en muchos ámbitos, desde la entrega de paquetes hasta la vigilancia. En nuestro último artículo te explicamos todo lo que necesitas saber sobre esta tecnología. #drones #tecnología",
+        "usuario": "dronetech",
+        "hashtags": ["drones", "tecnología"],
+        "fecha": "2023-03-15 15:00:00",
+        "retweets": 29,
+        "favoritos": 96
+    },
+
+    {
+        "id": 24,
+        "texto": "La tecnología de la inteligencia artificial está transformando la forma en que las empresas toman decisiones. En nuestro último artículo te contamos todo lo que necesitas saber sobre esta tecnología. #inteligenciaartificial #empresas",
+        "usuario": "businessai",
+        "hashtags": ["inteligenciaartificial", "empresas"],
+        "fecha": "2023-03-16 11:20:00",
+        "retweets": 62,
+        "favoritos": 215
+    },
+
+    {
+        "id": 25,
+        "texto": "La tecnología de la biometría está siendo utilizada para mejorar la seguridad en muchos ámbitos. En nuestro último artículo te explicamos todo lo que necesitas saber sobre esta tecnología. #biometría #seguridad",
+        "usuario": "biotech",
+        "hashtags": ["biometría", "seguridad"],
+        "fecha": "2023-03-16 16:45:00",
+        "retweets": 47,
+        "favoritos": 176
+    }
+]
