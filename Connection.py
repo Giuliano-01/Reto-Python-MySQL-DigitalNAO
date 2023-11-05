@@ -1,8 +1,20 @@
 # pip install mysql-connector-python
 import time
+import pandas as pd
 
 import mysql.connector
 from mysql.connector import errorcode
+
+
+def choose_yesno():
+    print("Yes (y) / No (n):")
+
+    yes = {'yes', 'y', 'ye', ''}
+    choice = input().lower()
+    if choice in yes:
+        return True
+    else:
+        return False
 
 
 class ConnectionMySQL:
@@ -48,6 +60,7 @@ class ConnectionMySQL:
     def connect_database(self, attempts=3, delay=2):
 
         attempt = 0
+        create_database = True
         while attempt < attempts:
             try:
                 connection = mysql.connector.connect(
@@ -67,12 +80,23 @@ class ConnectionMySQL:
                     return None
 
                 print("Connection failed: Retrying...", attempt, "/", attempts - 1)
-                if error.errno == errorcode.ER_BAD_DB_ERROR:
-                    print("Database doesn't exist, creating new one")
-                    self.create_database(self.database)
+                if (error.errno == errorcode.ER_BAD_DB_ERROR) & (create_database is True):
+                    print("Database doesn't exist")
+                    print("Do you want to create new one?: ")
+                    create_database = choose_yesno()
+                    if create_database:
+                        print("Yes")
+                        self.create_database(self.database)
 
                 time.sleep(delay ** attempt)
                 attempt += 1
 
         return None
+
+    def update_tables_database_from_json(self, file):
+
+        file_data = pd.read_json("./tweets_2.json")
+
+        for column_name in file_data:
+            print(column_name)
 
