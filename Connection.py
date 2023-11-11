@@ -92,11 +92,3 @@ class ConnectionMySQL:
                 attempt += 1
 
         return None
-
-    def update_tables_database_from_json(self, file):
-
-        file_data = pd.read_json("./tweets_2.json")
-
-        for column_name in file_data:
-            print(column_name)
-
