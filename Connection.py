@@ -19,12 +19,12 @@ def choose_yesno():
 
 class ConnectionMySQL:
 
-    def __init__(self, host, user, database):
+    def __init__(self, host, user, database, password):
 
         self.host = host
         self.user = user
         self.database = database
-        self.password = "4321"
+        self.password = password
 
     def create_database(self, database):
 
@@ -57,6 +57,7 @@ class ConnectionMySQL:
 
             return None
 
+    ## devuelve la conexion a mysql
     def connect_database(self, attempts=3, delay=2):
 
         attempt = 0
@@ -87,6 +88,9 @@ class ConnectionMySQL:
                     if create_database:
                         print("Yes")
                         self.create_database(self.database)
+                    else:
+                        print("Failed to connect, exiting without a connection")
+                        return None
 
                 time.sleep(delay ** attempt)
                 attempt += 1
