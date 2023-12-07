@@ -10,9 +10,11 @@ tweet_connection = new_connection.connect_database()
 ##InteractionSQL Class
 interactions_db = InteractMySQL(tweet_connection)
 
-## interactions_db.generate_tables_tweets_database_from_json("Tweets")
-
 
 data = pd.read_json("./tweets_2.json")
 
-interactions_db.create_table_from_data("test", data)
+# interactions_db.create_table_from_data("test", data)
+
+# interactions_db.insert_data_from_json("test", data)
+
+
