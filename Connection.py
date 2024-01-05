@@ -66,7 +66,6 @@ class ConnectionMySQL:
 
     ## devuelve la conexion a mysql
     def connect_database(self, attempts=3, delay=2):
-
         attempt = 0
         create_database = True
 
