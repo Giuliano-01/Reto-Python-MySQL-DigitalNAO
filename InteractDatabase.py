@@ -1,7 +1,7 @@
 # pip install mysql-connector-python
 import pandas as pd
 import mysql.connector
-
+from datetime import date
 
 def convertir_a_datetime(dataframe):
     for columna in dataframe.columns:
@@ -30,7 +30,8 @@ def choose_yesno():
 
 
 # Función para determinar el tipo y tamaño del campo basándonos en el valor del diccionario
-def determine_column_type_and_max(column_name, column):
+def determine_column_type_and_max_dataframe(column_name, column):
+
     try:
         if column_name == "fecha":
             return "DATE", ""
@@ -52,9 +53,31 @@ def determine_column_type_and_max(column_name, column):
         return "VARCHAR", "(255)"
 
 
+def determine_column_type_and_max_json(column_name, column):
+
+    try:
+        if column_name == "fecha":
+            return "DATE", ""
+        elif isinstance(column, int):
+            return "INT", "(10)"
+        elif isinstance(column, float):
+            return "FLOAT", ""
+        elif isinstance(column, str):
+            return "VARCHAR", "(255)"
+        elif isinstance(column, date):
+            return "DATE", ""
+        elif isinstance(column, bool):
+            return "BOOLEAN", ""
+        else:
+            # Puedes agregar más casos según sea necesario
+            return "VARCHAR", "(255)"
+
+    except:
+        return "VARCHAR", "(255)"
+
+
 # Función que devuelve lista de columnas de la tabla y lista de placeholders para la query
 def get_columns_and_placeholders(cursor, table_name):
-
     cursor.execute(f"DESCRIBE {table_name}")
     column_descriptions = cursor.fetchall()
 
@@ -74,9 +97,9 @@ def get_columns_and_placeholders(cursor, table_name):
     return [table_columns, columns_list, placeholders]
 
 
+# Función que verifica si ya existe una fila con los mismos valores
 def verify_existing_value_in_file(cursor, table_name, table_columns, row):
 
-    # Verificar si ya existe una fila con los mismos valores
     existing_query = f"SELECT * FROM {table_name} WHERE "
     conditions = [f"{column} = %s" for column in table_columns]
     existing_query += ' AND '.join(conditions)
@@ -94,29 +117,93 @@ class InteractMySQL:
 
         self.connection = connection
 
+    def exportJsonFromTable(self, table_name):
+
+        export = []
+        try:
+
+            with self.connection.cursor() as cursor:
+
+                countquery = f"SELECT COUNT(*) FROM {table_name}"
+                cursor.execute(countquery)
+                count = cursor.fetchone()[0]
+
+                for i in range(1, count + 1):
+                    query = f"SELECT * FROM {table_name} WHERE id = {i}"
+                    cursor.execute(query)
+                    row = cursor.fetchone()
+
+                    if row:
+                        export_row = {}
+                        column_names = [column[0] for column in cursor.description]
+
+                        # Iterar sobre las columnas y sus valores
+                        for column_name, column_value in zip(column_names, row):
+                            export_row[column_name] = column_value
+
+                        export.append(export_row)
+                    else:
+                        print(f"No se encontró un usuario con el nombre.")
+
+            return export
+        except Exception as e:
+            print(f"Error al insertar datos en la tabla '{table_name}': {e}")
+
     # Crea la tabla con su clave primaria
     def create_table_with_primary_key(self, table_name, primary_key_name):
 
-        print("Creating table..." + table_name)
+        print(f"-Creating table {table_name}...")
         query = f"CREATE TABLE {table_name} ({primary_key_name} INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY)"
         try:
 
-            # El cursor se cerrará automáticamente cuando salga del bloque with, independientemente de si se produjo una excepción o no.
+            # El cursor se cerrará automáticamente cuando salga del bloque with, independientemente de si se produjo
+            # una excepción o no.
             with self.connection.cursor() as cursor:
                 cursor.execute(query)
 
-            print("Table created")
+            print(f"-Table {table_name} created.")
             return True
 
         except mysql.connector.Error as error:
 
-            print("Error creating table:", error)
+            print(f"Error creating table {table_name}:", error)
             return False
 
-    # Crea una clave foranea
-    def create_foreign_keys(self, table_name, foreign_keys):
-        print(f"Creating foreign keys in {table_name}...")
+    # Crea una columna en la tabla (dataframe)
+    def create_column_from_data(self, table_name, column_name, data):
 
+        if isinstance(data, list):
+            # Obtener la columna del Json
+            column_data = data[0][column_name]
+            column_type, column_max = determine_column_type_and_max_json(column_name, column_data)
+        else:
+            # Obtener la columna del DataFrame
+            column_data = data[column_name]
+            # Determinar automáticamente el tipo y máximo de la columna
+            column_type, column_max = determine_column_type_and_max_dataframe(column_name, column_data)
+
+        print(f"Creating column {column_name} in {table_name} type {column_type} max {column_max}...")
+        if column_max:
+            query = f"ALTER TABLE {table_name} ADD {column_name} {column_type}{column_max} NOT NULL"
+        else:
+            query = f"ALTER TABLE {table_name} ADD {column_name} {column_type} NOT NULL"
+
+        try:
+
+            with self.connection.cursor() as cursor:
+                cursor.execute(query)
+
+            print(f"Column {column_name} created in {table_name}")
+            return True
+
+        except mysql.connector.Error as error:
+            print("Error creating column:", error)
+            return False
+
+    # Crea claves foraneas
+    def create_foreign_keys(self, table_name, foreign_keys):
+
+        print(f"Creating foreign keys in {table_name}...")
         queries = []
         for column_name, foreign_table, foreign_column in foreign_keys:
             query = f"ALTER TABLE {table_name} ADD COLUMN {column_name} INT, ADD CONSTRAINT fk_{table_name}_{column_name} " \
@@ -133,32 +220,6 @@ class InteractMySQL:
 
         except mysql.connector.Error as error:
             print("Error creating foreign keys:", error)
-            return False
-
-    # Crea una columna en la tabla
-    def create_column(self, table_name, column_name, data_frame):
-
-        # Obtener la columna del DataFrame
-        column_data = data_frame[column_name]
-
-        # Determinar automáticamente el tipo y máximo de la columna
-        column_type, column_max = determine_column_type_and_max(column_name, column_data)
-
-        print(f"Creating column in {table_name}/{column_name} type {column_type} max {column_max}...")
-        if column_max:
-            query = f"ALTER TABLE {table_name} ADD {column_name} {column_type}{column_max} NOT NULL"
-        else:
-            query = f"ALTER TABLE {table_name} ADD {column_name} {column_type} NOT NULL"
-
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute(query)
-
-            print("Column created")
-            return True
-
-        except mysql.connector.Error as error:
-            print("Error creating column:", error)
             return False
 
     # Completa la tabla con datos del data_frame
@@ -198,57 +259,42 @@ class InteractMySQL:
             # Cerrar el cursor al finalizar
             cursor.close()
 
-    def getIdFromTable(self, table_name, column_name, data):
+    # Completa la tabla con datos del array de objetos
+    def insert_data_table_from_json(self, table_name, data):
 
-        cursor = self.connection.cursor()
-        users = []
-        try:
-
-            for index, row in data.iterrows():
-                query = f"SELECT id FROM {table_name} WHERE {column_name} = '{row[column_name]}'"
-                cursor.execute(query)
-                result = cursor.fetchone()
-
-                if result:
-                    user_id = result[0]
-                    users.append({'id':user_id, column_name: row[column_name]})
-                else:
-                    print(f"No se encontró un usuario con el nombre '{row[column_name]}'.")
-
-            return users
-        except Exception as e:
-            print(f"Error al insertar datos en la tabla '{table_name}': {e}")
-
-    def insert_data_table_from_json(self, table_name, data_frame):
-
+        print(f"...Insertando datos en tabla: {table_name}, a partir de un json.")
         cursor = self.connection.cursor()
 
         try:
-
+            # print("a) Obteniendo lista de columnas y placeholders para realizar la query.")
             [table_columns, columns_list, placeholders] = get_columns_and_placeholders(cursor, table_name)
 
+            # print("b) Iterando sobre los elementos del array e insertando cada uno.")
             # Iterar sobre los datos y ejecutar la inserción en la base de datos
-            for data in data_frame:
+            for item in data:
 
-                user_id = data['user_id']
-                tweet_id = data['tweet_id']
+                #print(f"b.1) Verificando existencia de la fila {item} dentro de la tabla {table_name}")
+                [value_exist, existing_values] = verify_existing_value_in_file(cursor, table_name, table_columns, item)
 
-                #[value_exist, existing_values] = verify_existing_value_in_file(cursor, table_name, table_columns, user_id)
-#
-                #print(value_exist)
-                #print(existing_values)
-#
-                ## Si ya existe una fila, omitir la inserción
-                #if value_exist:
-                #    continue
+                #print(f"Elemento: {item} {'repetido' if value_exist else 'nuevo'}")
+
+                # Si ya existe una fila, omitir la inserción
+                if value_exist:
+                    # print(f"Omitiendo: {item}...")
+                    continue
 
                 # Utilizar parámetros de sustitución (%s) en la consulta para evitar SQL injection
                 query = f"INSERT INTO {table_name} ({columns_list}) VALUES ({placeholders})"
 
+                list_values = []
+                for clave, valor in item.items():
+                    list_values.append(valor)
+
                 # Ejecutar la consulta con los valores correspondientes
-                cursor.execute(query, tuple((user_id, tweet_id)))
+                cursor.execute(query, tuple(list_values))
                 self.connection.commit()
-                # Cerrar cursor y conexión
+
+            # Cerrar cursor y conexión
             cursor.close()
             self.connection.close()
             print("Data inserted successfully")
@@ -257,3 +303,28 @@ class InteractMySQL:
             # En caso de error, realizar un rollback para deshacer los cambios
             self.connection.rollback()
             print(f"Error inserting user-tweet data: {e}")
+
+    # -------
+
+    # Crea una tabla, crea las columnas de la lista e inserta los datos de un dataFrame
+    def create_insert_data_table_columns_from_data(self, table_name, primary_key_name, list_columns, data_frame):
+
+        try:
+            self.create_table_with_primary_key(table_name, primary_key_name)
+
+            for column_name in list_columns:
+
+                if column_name in data_frame:
+                    self.create_column_from_data(table_name, column_name, data_frame)
+                else:
+                    if all(column_name in d for d in data_frame):
+                        self.create_column_from_data(table_name, column_name, data_frame)
+
+            if isinstance(data_frame, list):
+                self.insert_data_table_from_json(table_name, data_frame)
+            else:
+                self.insert_data_table_from_dataframe(table_name, data_frame)
+
+        except Exception as e:
+
+            print(f"Error: {e}")
