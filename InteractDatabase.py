@@ -117,6 +117,23 @@ class InteractMySQL:
 
         self.connection = connection
 
+    # Devuleve el id del elemento guardado en la columna de la tabla de la base de datos
+    def getid(self, table_name, column_name, value_name):
+
+        query = f"SELECT * FROM {table_name} WHERE {column_name} = '{value_name}'"
+
+        try:
+
+            with self.connection.cursor() as cursor:
+
+                cursor.execute(query)
+
+                return cursor.fetchone()[0]
+
+        except mysql.connector.Error as error:
+            print(error)
+            return False
+
     def exportJsonFromTable(self, table_name):
 
         export = []
@@ -273,10 +290,10 @@ class InteractMySQL:
             # Iterar sobre los datos y ejecutar la inserción en la base de datos
             for item in data:
 
-                #print(f"b.1) Verificando existencia de la fila {item} dentro de la tabla {table_name}")
+                # print(f"b.1) Verificando existencia de la fila {item} dentro de la tabla {table_name}")
                 [value_exist, existing_values] = verify_existing_value_in_file(cursor, table_name, table_columns, item)
 
-                #print(f"Elemento: {item} {'repetido' if value_exist else 'nuevo'}")
+                # print(f"Elemento: {item} {'repetido' if value_exist else 'nuevo'}")
 
                 # Si ya existe una fila, omitir la inserción
                 if value_exist:
@@ -284,6 +301,7 @@ class InteractMySQL:
                     continue
 
                 # Utilizar parámetros de sustitución (%s) en la consulta para evitar SQL injection
+
                 query = f"INSERT INTO {table_name} ({columns_list}) VALUES ({placeholders})"
 
                 list_values = []
