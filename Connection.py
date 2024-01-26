@@ -1,7 +1,6 @@
 # pip install mysql-connector-python
 import time
 import pandas as pd
-
 import mysql.connector
 from mysql.connector import errorcode
 

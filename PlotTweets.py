@@ -3,8 +3,17 @@ import matplotlib.pyplot as plt
 from collections import Counter
 import random
 import numpy as np
+from SentimentReq import get_sentiments_list
 
 data = pd.read_json("./tweets_2.json")
+
+# Function para
+
+print(get_sentiments_list())
+
+
+
+
 
 # Inicializamos un diccionario para almacenar la suma de retweets por hashtag
 retweets_por_hashtag = {}
