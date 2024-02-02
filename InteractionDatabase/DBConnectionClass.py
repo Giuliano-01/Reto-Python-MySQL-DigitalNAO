@@ -1,19 +1,7 @@
-# pip install mysql-connector-python
 import time
-import pandas as pd
 import mysql.connector
 from mysql.connector import errorcode
-
-
-def choose_yesno():
-    print("Yes (y) / No (n):")
-
-    yes = {'yes', 'y', 'ye', ''}
-    choice = input().lower()
-    if choice in yes:
-        return True
-    else:
-        return False
+from InteractionDatabase.Utils import *
 
 
 class ConnectionMySQL:
@@ -25,46 +13,42 @@ class ConnectionMySQL:
         self.database = database
         self.password = password
 
+    # Crea la base de datos
     def create_database(self, database):
-
         try:
             with mysql.connector.connect(
-                host=self.host,
-                user=self.user,
-                password=self.password
+                    host=self.host,
+                    user=self.user,
+                    password=self.password
             ) as connection:
-
                 print("Connected to MySQL Server version", connection.get_server_info())
 
                 if connection.is_connected():
-
                     cursor = connection.cursor()
-                    cursor.execute("CREATE DATABASE %s", (database,))
 
-                    print("Database created\n New databases list:")
+                    # Utilizando formato de cadena f-string
+                    cursor.execute(f"CREATE DATABASE {database}")
+
+                    print("Database created\nNew databases list:")
                     cursor.execute("SHOW DATABASES")
                     for x in cursor:
                         print(x)
+
                     cursor.close()
-                    connection.close()
-                    print("MySQL connection is closed")
 
                 return None
 
         except mysql.connector.Error as error:
-
             print(f"Error while connecting to MySQL: {error}")
-
             return None
 
         finally:
             if connection.is_connected():
-                cursor.close()
                 connection.close()
                 print("MySQL connection is closed")
 
-    ## devuelve la conexion a mysql
-    def connect_database(self, attempts=3, delay=2):
+    # Conecta a una base de datos y retorna esa conexion
+    def connect_database(self, attempts=1, delay=2):
         attempt = 0
         create_database = True
 

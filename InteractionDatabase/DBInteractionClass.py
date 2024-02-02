@@ -1,114 +1,5 @@
-# pip install mysql-connector-python
-import pandas as pd
 import mysql.connector
-from datetime import date
-
-def convertir_a_datetime(dataframe):
-    for columna in dataframe.columns:
-
-        if columna == "fecha":
-            try:
-                # Intentar convertir la columna a datetime
-                dataframe[columna] = pd.to_datetime(dataframe[columna])
-            except (TypeError, ValueError):
-                # Ignorar columnas que no se pueden convertir a datetime
-                pass
-
-    # Devolver el DataFrame después de intentar convertir todas las columnas
-    return dataframe
-
-
-def choose_yesno():
-    print("Yes (y) / No (n):")
-
-    yes = {'yes', 'y', 'ye', ''}
-    choice = input().lower()
-    if choice in yes:
-        return True
-    else:
-        return False
-
-
-# Función para determinar el tipo y tamaño del campo basándonos en el valor del diccionario
-def determine_column_type_and_max_dataframe(column_name, column):
-
-    try:
-        if column_name == "fecha":
-            return "DATE", ""
-        elif pd.api.types.is_integer_dtype(column):
-            return "INT", "(10)"
-        elif pd.api.types.is_float_dtype(column):
-            return "FLOAT", ""
-        elif pd.api.types.is_string_dtype(column):
-            return "VARCHAR", "(255)"
-        elif pd.api.types.is_datetime64_any_dtype(column):
-            return "DATE", ""
-        elif pd.api.types.is_bool_dtype(column):
-            return "BOOLEAN", ""
-        else:
-            # Puedes agregar más casos según sea necesario
-            return "VARCHAR", "(255)"
-
-    except:
-        return "VARCHAR", "(255)"
-
-
-def determine_column_type_and_max_json(column_name, column):
-
-    try:
-        if column_name == "fecha":
-            return "DATE", ""
-        elif isinstance(column, int):
-            return "INT", "(10)"
-        elif isinstance(column, float):
-            return "FLOAT", ""
-        elif isinstance(column, str):
-            return "VARCHAR", "(255)"
-        elif isinstance(column, date):
-            return "DATE", ""
-        elif isinstance(column, bool):
-            return "BOOLEAN", ""
-        else:
-            # Puedes agregar más casos según sea necesario
-            return "VARCHAR", "(255)"
-
-    except:
-        return "VARCHAR", "(255)"
-
-
-# Función que devuelve lista de columnas de la tabla y lista de placeholders para la query
-def get_columns_and_placeholders(cursor, table_name):
-    cursor.execute(f"DESCRIBE {table_name}")
-    column_descriptions = cursor.fetchall()
-
-    # Extraer los nombres de las columnas y determinar si alguna columna es autoincremental
-    table_columns = []
-    for column_info in column_descriptions:
-        column_name = column_info[0]
-        is_auto_increment = column_info[5] == 'auto_increment'
-        if not is_auto_increment:
-            table_columns.append(column_name)
-
-    # Construir la lista de columnas para la consulta (excluyendo la que sea autoincremental)
-    columns_list = ', '.join(table_columns)
-    # Construir la lista de marcadores de posición %s para la consulta
-    placeholders = ', '.join(['%s' for _ in table_columns])
-
-    return [table_columns, columns_list, placeholders]
-
-
-# Función que verifica si ya existe una fila con los mismos valores
-def verify_existing_value_in_file(cursor, table_name, table_columns, row):
-
-    existing_query = f"SELECT * FROM {table_name} WHERE "
-    conditions = [f"{column} = %s" for column in table_columns]
-    existing_query += ' AND '.join(conditions)
-
-    existing_values = [row[column] for column in table_columns]
-
-    cursor.execute(existing_query, tuple(existing_values))
-
-    return [cursor.fetchone(), existing_values]
+from InteractionDatabase.Utils import *
 
 
 class InteractMySQL:
@@ -117,24 +8,50 @@ class InteractMySQL:
 
         self.connection = connection
 
-    # Devuleve el id del elemento guardado en la columna de la tabla de la base de datos
-    def getid(self, table_name, column_name, value_name):
+    def getcolumnvalue_from_other_columnvalue(self, table_name, column_name, value_name, return_column):
 
-        query = f"SELECT * FROM {table_name} WHERE {column_name} = '{value_name}'"
-
+        query = f"SELECT {return_column} FROM {table_name} WHERE {column_name} = '{value_name}'"
         try:
 
             with self.connection.cursor() as cursor:
-
                 cursor.execute(query)
-
-                return cursor.fetchone()[0]
+                # Recuperar los resultados
+                result = cursor.fetchall()
+                # Verificar si hay resultados
+                if result:
+                    return result  # Devolver el valor de la columna deseada
+                else:
+                    return None
 
         except mysql.connector.Error as error:
             print(error)
             return False
 
-    def exportJsonFromTable(self, table_name):
+        finally:
+            # Cerrar el cursor al finalizar
+            if 'cursor' in locals() and cursor is not None:
+                cursor.close()
+
+    # Devuleve el id del elemento guardado en la columna de la tabla de la base de datos
+    def getid(self, table_name, column_name, value_name):
+
+        query = f"SELECT * FROM {table_name} WHERE {column_name} = '{value_name}'"
+        try:
+
+            with self.connection.cursor() as cursor:
+                cursor.execute(query)
+                id = cursor.fetchone()[0]
+                return id
+
+        except mysql.connector.Error as error:
+            print(error)
+            return False
+
+        finally:
+            # Cerrar el cursor al finalizar
+            cursor.close()
+
+    def export_json_from_table(self, table_name):
 
         export = []
         try:
@@ -328,6 +245,7 @@ class InteractMySQL:
     def create_insert_data_table_columns_from_data(self, table_name, primary_key_name, list_columns, data_frame):
 
         try:
+            # Crea la tabla
             self.create_table_with_primary_key(table_name, primary_key_name)
 
             for column_name in list_columns:

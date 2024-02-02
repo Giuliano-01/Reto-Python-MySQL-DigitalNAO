@@ -1,10 +1,11 @@
-import requests
-from Connection import *
-from InteractDatabase import *
+
+from InteractionDatabase.DBConnectionClass import *
+from InteractionDatabase.DBInteractionClass import *
 import pandas as pd
 
+
 # ConnectionSQL Class
-tweet_connection = ConnectionMySQL("localhost", "root", "test", "4321").connect_database()
+tweet_connection = ConnectionMySQL("localhost", "root", "tweets_db", "4321").connect_database()
 # InteractionSQL Class
 interactions_db = InteractMySQL(tweet_connection)
 
@@ -22,6 +23,7 @@ def obtainsentiment(text):
         "Content-Type": "application/x-www-form-urlencoded",
     }
 
+    import requests
     response = requests.post(api_url, data=form_data, headers=headers)
 
     if response.status_code == 200:
@@ -35,7 +37,7 @@ def obtainsentiment(text):
 
 def get_sentiments_list_api():
 
-    data = pd.read_json("./tweets_2.json")
+    data = pd.read_json("../tweets_2.json")
 
     tweet_sentiment_list = []
     for index, row in data.iterrows():
